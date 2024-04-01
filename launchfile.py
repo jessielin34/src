@@ -8,7 +8,7 @@ import subprocess
 import os
 
 def experiment(map_name, log_name, density, flow, risk, cusum, discount, explore, advisors, params):
-    project_home = os.path.expanduser("~/catkin_ws1/semaforr")
+    project_home = os.path.expanduser("~/catkin_ws/src")
     menge_path = project_home+"/examples/core"
     semaforr_path = project_home+"/semaforr"
 
@@ -21,23 +21,23 @@ def experiment(map_name, log_name, density, flow, risk, cusum, discount, explore
     target_set = map_folder+"/" + target_file_name
 
 
-    print target_set
-    print map_config
-    print map_xml
-    print map_dimensions
-    print log_name
-    print why_log_name
-    print whyplan_log_name
-    print situation_log_name
+    print(target_set)
+    print(map_config)
+    print(map_xml)
+    print(map_dimensions)
+    print(log_name)
+    print(why_log_name)
+    print(whyplan_log_name)
+    #print(situation_log_name)
 
     #start roscore
     roscore = subprocess.Popen(['roscore'])
     time.sleep(5)
 
     # start menge simulator
-    menge_sim_process = subprocess.Popen(['rosrun','menge_sim','menge_sim','-p',map_xml])
-    print "waiting,,"
-    time.sleep(30)
+    # menge_sim_process = subprocess.Popen(['rosrun','menge_sim','menge_sim','-p',map_xml])
+    # print("waiting,,")
+    # time.sleep(30)
 
     # start crowd model
     #crowd_process = subprocess.Popen(['rosrun','crowd/crowd_learner','learn.py',density, flow, risk, cusum, discount, explore])
@@ -58,7 +58,7 @@ def experiment(map_name, log_name, density, flow, risk, cusum, discount, explore
 
     # start semaforr
     semaforr_process = subprocess.Popen(['rosrun','semaforr','semaforr', semaforr_path, target_set, map_config, map_dimensions, advisors, params])
-    print "waiting,,"
+    print("waiting,,")
     time.sleep(2)
     
     # start why
@@ -73,30 +73,30 @@ def experiment(map_name, log_name, density, flow, risk, cusum, discount, explore
 
     # Wait till semaforr completes the process
     while semaforr_process.poll() is None:
-        print "Semaforr process still running ..."
+        print("Semaforr process still running ...")
         if rviz_process.poll() is not None:
             rviz_process = subprocess.Popen(['rosrun','rviz','rviz'])
-        if menge_sim_process.poll() is not None or str(subprocess.check_output(["ps -A | grep 'menge' | wc -l"],shell=True))[0] != "1":
-            break
+        # if menge_sim_process.poll() is not None or str(subprocess.check_output(["ps -A | grep 'menge' | wc -l"],shell=True))[0] != "1":
+        #     break
         time.sleep(1)
     try:
         semaforr_process.terminate()
         while semaforr_process.poll() is None:
-            print "Semaforr process still running ..."
+            print("Semaforr process still running ...")
             time.sleep(1)
     except:
-        print "Semaforr already terminated"
-    print "Semaforr process has ended ..."
-    print "Terminating the simulator"
+        print("Semaforr already terminated")
+    print("Semaforr process has ended ...")
+    print("Terminating the simulator")
 
-    try:
-        menge_sim_process.terminate()
-        while menge_sim_process.poll() is None:
-            print "Menge process still running ..."
-            time.sleep(1)
-    except:
-        print "Menge already terminated"
-    print "Menge terminated!"
+    # try:
+    #     menge_sim_process.terminate()
+    #     while menge_sim_process.poll() is None:
+    #         print("Menge process still running ...")
+    #         time.sleep(1)
+    # except:
+    #     print("Menge already terminated")
+    # print("Menge terminated!")
 
     rviz_process.terminate()
     
@@ -119,7 +119,7 @@ def experiment(map_name, log_name, density, flow, risk, cusum, discount, explore
 
     roscore.terminate()
     time.sleep(30)
-    print "roscore terminated!"
+    print("roscore terminated!")
 
 density = "off"
 flow = "off"
